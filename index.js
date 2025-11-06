@@ -127,7 +127,22 @@ const response = {
           `🚙 Vehicle Type: ${vehicleType}\n\n` +
           `🎯 **Recommended Vehicle:** ${rec.model}\n` +
           `${rec.description ? `📋 ${rec.description}\n` : ''}` +
-          `🔗 **Learn More / View on Ford.com:** ${rec.url.startsWith("https://") ? rec.url : "https://www.ford.com"}`
+          `🔗 **Learn More / View on Ford.com:** ${
+            rec.url?.startsWith("https://") ? rec.url : "https://www.ford.com"
+          }`
+        ]
+      }
+    },
+    {
+      card: {
+        title: rec.model || "Your Ford Recommendation",
+        subtitle: rec.description || "Check out this great Ford vehicle!",
+        imageUri: rec.imageUri || "https://share.google/images/R7sleNMql5INVwwoV",
+        buttons: [
+          {
+            text: "Shop this car",
+            postback: rec.url?.startsWith("https://") ? rec.url : "https://www.ford.com"
+          }
         ]
       }
     }
