@@ -20,7 +20,7 @@ app.post('/webhook', (req, res) => {
 
     // Extract each parameter
     const budget = getParam('Budget');
-    const drivingType = getParam('DrivType');
+    const drivingType = getParam('DrivingTypes');
     const fuelType = getParam('FuelPref');
     const passengerCount = getParam('PassCnt');
     const vehicleType = getParam('VehType');
