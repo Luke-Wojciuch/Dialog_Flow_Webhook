@@ -16,10 +16,10 @@ app.post('/webhook', (req, res) => {
     };
 
     const budget = getParam('Budget');
-    const passengers = getParam('PassCnt');
-    const fuel = getParam('FuelPref');
-    const driving = getParam('DrivType');
-    const vehicleType = getParam('VehType');
+    const passengers = getParam('PassengerCounts');
+    const fuel = getParam('FuelPreferences');
+    const driving = getParam('DrivingTypes');
+    const vehicleType = getParam('VehicleTypes');
 
     // Decision logic
     function recommendFord(budget, passengers, fuel, driving, vehType) {
