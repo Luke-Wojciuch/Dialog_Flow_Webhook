@@ -106,7 +106,7 @@ app.post('/webhook', (req, res) => {
             model: "Ford Escape",
             description: "Versatile SUV suitable for a wide range of needs",
             url: "https://www.ford.com/suvs/escape/",
-            image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2022/collections/21_ford_escape.png"
+            image: "https://www.google.com/imgres?q=ford%20escape%20image&imgurl=https%3A%2F%2Fwww.assets.ford.com%2Fadobe%2Fassets%2Furn%3Aaaid%3Aaem%3Ad17d71c8-f984-449f-9f62-3eb4fd7465a9%2Fas%2F24_FRD_ESP_F2A0033_stln_elt_rprd_Elevated_Desktop_BU.webp%3Fmax-quality%3D75%26crop-names%3D1_21x9%26width%3D3840&imgrefurl=https%3A%2F%2Fwww.ford.com%2Fsuvs-crossovers%2Fescape%2F&docid=k1o6W1G5Sv-zRM&tbnid=9J1x0wzLdGj87M&vet=12ahUKEwip-v6Wjd6QAxUWz_ACHbfREYgQM3oECBAQAA..i&w=3758&h=1611&hcb=2&ved=2ahUKEwip-v6Wjd6QAxUWz_ACHbfREYgQM3oECBAQAA
         };
     }
 
@@ -114,66 +114,38 @@ app.post('/webhook', (req, res) => {
 
     // Rich response with improved formatting
     const response = {
-        fulfillmentMessages: [
-            {
-                text: {
-                    text: [
-                        `🚗 Your Perfect Ford Match!\n\n` +
-                        `✨ Based on your preferences:\n` +
-                        `💰 Budget: ${budget}\n` +
-                        `👥 Passengers: ${passengers}\n` +
-                        `⛽ Fuel Type: ${fuel}\n` +
-                        `🛣️ Driving Style: ${driving}\n` +
-                        `🚙 Vehicle Type: ${vehicleType}\n\n` +
-                        `🎯 Recommended: ${rec.model}\n` +
-                        `${rec.description ? `📋 ${rec.description}` : ''}`
-                    ]
-                }
-            },
-            {
-                card: {
-                    title: `✅ ${rec.model}`,
-                    subtitle: rec.description || "Your ideal Ford vehicle",
-                    imageUri: rec.image,
-                    buttons: [
-                        {
-                            text: "🔗 Explore on Ford.com",
-                            postback: rec.url
-                        }
-                    ]
-                }
-            },
-            {
-                payload: {
-                    richContent: [
-                        [
-                            {
-                                type: "info",
-                                title: "Why This Vehicle?",
-                                subtitle: rec.description || "This vehicle matches your specific requirements",
-                                actionLink: rec.url
-                            },
-                            {
-                                type: "divider"
-                            },
-                            {
-                                type: "chips",
-                                options: [
-                                    {
-                                        text: "View Details",
-                                        link: rec.url
-                                    },
-                                    {
-                                        text: "Start Over"
-                                    }
-                                ]
-                            }
-                        ]
-                    ]
-                }
+          fulfillmentMessages: [
+        {
+            text: {
+                text: [
+                    `🚗 Your Perfect Ford Match!\n\n` +
+                    `✨ Based on your preferences:\n` +
+                    `💰 Budget: ${budget}\n` +
+                    `👥 Passengers: ${passengers}\n` +
+                    `⛽ Fuel Type: ${fuel}\n` +
+                    `🛣️ Driving Style: ${driving}\n` +
+                    `🚙 Vehicle Type: ${vehicleType}\n\n` +
+                    `🎯 Recommended: ${rec.model}\n` +
+                    `${rec.description ? `📋 ${rec.description}` : ''}`
+                ]
             }
-        ]
-    };
+        },
+        {
+            card: {
+                title: `Recommended: ${rec.model}`,
+                subtitle: rec.description || "Your ideal Ford vehicle",
+                imageUri: rec.image,
+                buttons: [
+                    {
+                        text: "View on Ford.com",
+                        postback: rec.url
+                    }
+                ]
+            }
+        }
+    ]
+};
+
 
     console.log(`✅ Recommended: ${rec.model}`);
     return res.json(response);
