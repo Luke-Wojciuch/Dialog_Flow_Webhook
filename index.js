@@ -106,7 +106,7 @@ app.post('/webhook', (req, res) => {
             model: "Ford Escape",
             description: "Versatile SUV suitable for a wide range of needs",
             url: "https://www.ford.com/suvs/escape/",
-            image: "https://www.google.com/imgres?q=ford%20escape%20image&imgurl=https%3A%2F%2Fwww.assets.ford.com%2Fadobe%2Fassets%2Furn%3Aaaid%3Aaem%3Ad17d71c8-f984-449f-9f62-3eb4fd7465a9%2Fas%2F24_FRD_ESP_F2A0033_stln_elt_rprd_Elevated_Desktop_BU.webp%3Fmax-quality%3D75%26crop-names%3D1_21x9%26width%3D3840&imgrefurl=https%3A%2F%2Fwww.ford.com%2Fsuvs-crossovers%2Fescape%2F&docid=k1o6W1G5Sv-zRM&tbnid=9J1x0wzLdGj87M&vet=12ahUKEwip-v6Wjd6QAxUWz_ACHbfREYgQM3oECBAQAA..i&w=3758&h=1611&hcb=2&ved=2ahUKEwip-v6Wjd6QAxUWz_ACHbfREYgQM3oECBAQAA"
+            image: "https://share.google/images/DxEzqLQpdQuaps41B"
         };
     }
 
@@ -118,37 +118,44 @@ const response = {
     {
       text: {
         text: [
-          `🚗 **Your Perfect Ford Match!**\n\n` +
-          `✨ **Based on your preferences:**\n` +
+          `🚗 Your Perfect Ford Match!\n\n` +
+          `✨ Based on your preferences:\n` +
           `💰 Budget: ${budget}\n` +
           `👥 Passengers: ${passengers}\n` +
           `⛽ Fuel Type: ${fuel}\n` +
           `🛣️ Driving Style: ${driving}\n` +
           `🚙 Vehicle Type: ${vehicleType}\n\n` +
-          `🎯 **Recommended Vehicle:** ${rec.model}\n` +
-          `${rec.description ? `📋 ${rec.description}\n` : ''}` +
-          `🔗 **Learn More / View on Ford.com:** ${
-            rec.url?.startsWith("https://") ? rec.url : "https://www.ford.com"
-          }`
+          `🎯 Recommended: ${rec.model}\n` +
+          `${rec.description ? `📋 ${rec.description}` : ''}`
         ]
       }
     },
     {
-      card: {
-        title: rec.model || "Your Ford Recommendation",
-        subtitle: rec.description || "Check out this great Ford vehicle!",
-        imageUri: rec.imageUri || "https://share.google/images/R7sleNMql5INVwwoV",
-        buttons: [
-          {
-            text: "Shop this car",
-            postback: rec.url?.startsWith("https://") ? rec.url : "https://www.ford.com"
-          }
+      payload: {
+        richContent: [
+          [
+            {
+              type: "info",
+              title: `✅ ${rec.model}`,
+              subtitle: rec.description || "Your ideal Ford vehicle",
+              image: {
+                src: { rawUrl: rec.image }
+              },
+              actionLink: rec.url
+            },
+            { type: "divider" },
+            {
+              type: "chips",
+              options: [
+                { text: "View Details", link: rec.url },
+              ]
+            }
+          ]
         ]
       }
     }
   ]
 };
-
 
 
     console.log(`✅ Recommended: ${rec.model}`);
