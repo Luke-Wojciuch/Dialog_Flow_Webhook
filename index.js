@@ -124,13 +124,12 @@ app.post('/webhook', (req, res) => {
                     `👥 Passengers: ${passengers}\n` +
                     `⛽ Fuel Type: ${fuel}\n` +
                     `🛣️ Driving Style: ${driving}\n` +
-                    `🚙 Vehicle Type: ${vehicleType}\n\n` +
-                    `🎯 Recommended: ${rec.model}\n` +
-                    `${rec.description ? `📋 ${rec.description}` : ''}`
+                    `🚙 Vehicle Type: ${vehicleType}\n\n`
                 ]
             }
         },
         {
+            platform: "PLATFORM_UNSPECIFIED", 
             card: {
                 title: `Recommended: ${rec.model}`,
                 subtitle: rec.description || "Your ideal Ford vehicle",
