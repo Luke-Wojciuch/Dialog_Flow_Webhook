@@ -27,8 +27,9 @@ app.post('/webhook', (req, res) => {
             if (passengers === "1-2" && fuel === "Gas" && driving === "City" && vehType === "Sedan") {
                 return {
                     model: "Ford Fiesta",
-                    url: "https://www.ford.com/trucks/maverick/",
-                    image: "https://www.google.com/imgres?q=ford%20maverick%20image&imgurl=https%3A%2F%2Fdi-uploads-pod41.dealerinspire.com%2Fsunriseford%2Fuploads%2F2023%2F10%2F2023-Ford-Maverick-2-1.jpg&imgrefurl=https%3A%2F%2Fwww.sunrise-ford.com%2Fthe-2023-ford-maverick-is-more-in-demand-than-ever%2F&docid=OYCUlmBwEAncbM&tbnid=NRA_5eBBxy4smM&vet=12ahUKEwjU-u7HiN6QAxUZLdAFHfZlERQQM3oECCcQAA..i&w=1000&h=667&hcb=2&ved=2ahUKEwjU-u7HiN6QAxUZLdAFHfZlERQQM3oECCcQAA"
+                    description: "Perfect for city driving with excellent fuel economy",
+                    url: "https://www.ford.com/cars/fiesta/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fiesta/2022/collections/21_ford_fiesta.png"
                 };
             }
         }
@@ -37,8 +38,9 @@ app.post('/webhook', (req, res) => {
             if (passengers === "3-4" && (fuel === "Gas" || fuel === "Hybrid") && vehType === "SUV") {
                 return {
                     model: "Ford Escape",
+                    description: "Versatile SUV with available hybrid option for efficient family transport",
                     url: "https://www.ford.com/suvs/escape/",
-                    image: "https://www.google.com/imgres?q=ford%20escape%20image&imgurl=https%3A%2F%2Fwww.assets.ford.com%2Fadobe%2Fassets%2Furn%3Aaaid%3Aaem%3Ad17d71c8-f984-449f-9f62-3eb4fd7465a9%2Fas%2F24_FRD_ESP_F2A0033_stln_elt_rprd_Elevated_Desktop_BU.webp%3Fmax-quality%3D75%26crop-names%3D1_21x9%26width%3D3840&imgrefurl=https%3A%2F%2Fwww.ford.com%2Fsuvs-crossovers%2Fescape%2F&docid=k1o6W1G5Sv-zRM&tbnid=9J1x0wzLdGj87M&vet=12ahUKEwiVwd3miN6QAxU84ckDHXflMwQQM3oECB8QAA..i&w=3758&h=1611&hcb=2&ved=2ahUKEwiVwd3miN6QAxU84ckDHXflMwQQM3oECB8QAA"
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2022/collections/21_ford_escape.png"
                 };
             }
         }
@@ -47,6 +49,7 @@ app.post('/webhook', (req, res) => {
             if (passengers === "3-4" && fuel === "Gas" && driving === "Mixed Use" && vehType === "SUV") {
                 return {
                     model: "Ford Bronco Sport",
+                    description: "Adventure-ready SUV built for both city streets and off-road trails",
                     url: "https://www.ford.com/suvs/bronco-sport/",
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/bronco-sport/2022/collections/21_ford_bronco_sport.png"
                 };
@@ -54,6 +57,7 @@ app.post('/webhook', (req, res) => {
             if (passengers === "5-6" && fuel === "Gas" && driving === "Highway" && vehType === "Truck") {
                 return {
                     model: "Ford F-150",
+                    description: "America's best-selling truck with legendary capability and comfort",
                     url: "https://www.ford.com/trucks/f150/",
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/trucks/f150/2022/collections/21_ford_f150.png"
                 };
@@ -64,6 +68,7 @@ app.post('/webhook', (req, res) => {
             if (passengers === "5-6" && (fuel === "Gas" || fuel === "Hybrid") && vehType === "SUV") {
                 return {
                     model: "Ford Explorer",
+                    description: "Spacious three-row SUV combining luxury with utility",
                     url: "https://www.ford.com/suvs/explorer/",
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/explorer/2022/collections/21_ford_explorer.png"
                 };
@@ -71,6 +76,7 @@ app.post('/webhook', (req, res) => {
             if (passengers === "7+" && fuel === "Gas" && vehType === "SUV") {
                 return {
                     model: "Ford Expedition",
+                    description: "Full-size SUV with maximum passenger and cargo capacity",
                     url: "https://www.ford.com/suvs/expedition/",
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/expedition/2022/collections/21_ford_expedition.png"
                 };
@@ -78,6 +84,7 @@ app.post('/webhook', (req, res) => {
             if ((passengers === "1-6") && fuel === "Electric" && vehType === "Truck") {
                 return {
                     model: "Ford F-150 Lightning",
+                    description: "Electric powerhouse with cutting-edge technology and zero emissions",
                     url: "https://www.ford.com/trucks/f150/lightning/",
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/trucks/f150/lightning/2022/collections/21_ford_f150_lightning.png"
                 };
@@ -88,6 +95,7 @@ app.post('/webhook', (req, res) => {
         if (budget === "$30,000+" && passengers === "1-2" && fuel === "Electric" && vehType === "Sedan") {
             return {
                 model: "Ford Mustang Mach-E",
+                description: "Electric performance SUV with iconic Mustang heritage",
                 url: "https://www.ford.com/cars/mustang-mach-e/",
                 image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/mustang-mach-e/2022/collections/21_ford_mustang_mach-e.png"
             };
@@ -96,6 +104,7 @@ app.post('/webhook', (req, res) => {
         // Default fallback
         return {
             model: "Ford Escape",
+            description: "Versatile SUV suitable for a wide range of needs",
             url: "https://www.ford.com/suvs/escape/",
             image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2022/collections/21_ford_escape.png"
         };
@@ -103,30 +112,32 @@ app.post('/webhook', (req, res) => {
 
     const rec = recommendFord(budget, passengers, fuel, driving, vehicleType);
 
-    // Rich response with image and button
+    // Rich response with improved formatting
     const response = {
         fulfillmentMessages: [
             {
                 text: {
                     text: [
-                        `Based on your selections:
-Budget: ${budget}
-Passengers: ${passengers}
-Fuel: ${fuel}
-Driving: ${driving}
-Vehicle Type: ${vehicleType}
-
-Recommended Vehicle: ${rec.model}`
+                        `🚗 Your Perfect Ford Match!\n\n` +
+                        `✨ Based on your preferences:\n` +
+                        `💰 Budget: ${budget}\n` +
+                        `👥 Passengers: ${passengers}\n` +
+                        `⛽ Fuel Type: ${fuel}\n` +
+                        `🛣️ Driving Style: ${driving}\n` +
+                        `🚙 Vehicle Type: ${vehicleType}\n\n` +
+                        `🎯 Recommended: ${rec.model}\n` +
+                        `${rec.description ? `📋 ${rec.description}` : ''}`
                     ]
                 }
             },
             {
                 card: {
-                    title: rec.model,
+                    title: `✅ ${rec.model}`,
+                    subtitle: rec.description || "Your ideal Ford vehicle",
                     imageUri: rec.image,
                     buttons: [
                         {
-                            text: "View on Ford.com",
+                            text: "🔗 Explore on Ford.com",
                             postback: rec.url
                         }
                     ]
@@ -137,9 +148,25 @@ Recommended Vehicle: ${rec.model}`
                     richContent: [
                         [
                             {
-                                type: "image",
-                                rawUrl: "https://www.ford.com/etc/designs/ford/clientlibs/images/logos/ford-logo.png",
-                                accessibilityText: "Ford Logo"
+                                type: "info",
+                                title: "Why This Vehicle?",
+                                subtitle: rec.description || "This vehicle matches your specific requirements",
+                                actionLink: rec.url
+                            },
+                            {
+                                type: "divider"
+                            },
+                            {
+                                type: "chips",
+                                options: [
+                                    {
+                                        text: "View Details",
+                                        link: rec.url
+                                    },
+                                    {
+                                        text: "Start Over"
+                                    }
+                                ]
                             }
                         ]
                     ]
@@ -148,11 +175,11 @@ Recommended Vehicle: ${rec.model}`
         ]
     };
 
-    console.log("Webhook response:", rec.model);
+    console.log(`✅ Recommended: ${rec.model}`);
     return res.json(response);
 });
 
-app.get('/', (req, res) => res.send("Webhook is running!"));
+app.get('/', (req, res) => res.send("🚗 Ford Recommendation Webhook is running!"));
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
