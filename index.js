@@ -28,7 +28,7 @@ app.post('/webhook', (req, res) => {
                 return {
                     model: "Ford Fiesta",
                     url: "https://www.ford.com/trucks/maverick/",
-                    image: "https://www.google.com/imgres?q=ford%20maverick%20image&imgurl=https%3A%2F%2Fdi-uploads-pod41.dealerinspire.com%2Fsunriseford%2Fuploads%2F2023%2F10%2F2023-Ford-Maverick-2-1.jpg&imgrefurl=https%3A%2F%2Fwww.sunrise-ford.com%2Fthe-2023-ford-maverick-is-more-in-demand-than-ever%2F&docid=OYCUlmBwEAncbM&tbnid=NRA_5eBBxy4smM&vet=12ahUKEwjU-u7HiN6QAxUZLdAFHfZlERQQM3oECCcQAA..i&w=1000&h=667&hcb=2&ved=2ahUKEwjU-u7HiN6QAxUZLdAFHfZlERQQM3oECCcQAA
+                    image: "https://www.google.com/imgres?q=ford%20maverick%20image&imgurl=https%3A%2F%2Fdi-uploads-pod41.dealerinspire.com%2Fsunriseford%2Fuploads%2F2023%2F10%2F2023-Ford-Maverick-2-1.jpg&imgrefurl=https%3A%2F%2Fwww.sunrise-ford.com%2Fthe-2023-ford-maverick-is-more-in-demand-than-ever%2F&docid=OYCUlmBwEAncbM&tbnid=NRA_5eBBxy4smM&vet=12ahUKEwjU-u7HiN6QAxUZLdAFHfZlERQQM3oECCcQAA..i&w=1000&h=667&hcb=2&ved=2ahUKEwjU-u7HiN6QAxUZLdAFHfZlERQQM3oECCcQAA"
                 };
             }
         }
