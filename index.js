@@ -113,37 +113,42 @@ app.post('/webhook', (req, res) => {
     const rec = recommendFord(budget, passengers, fuel, driving, vehicleType);
 
     // Rich response with improved formatting
-    const response = {
-          fulfillmentMessages: [
-        {
-            text: {
-                text: [
-                    `🚗 Your Perfect Ford Match!\n\n` +
-                    `✨ Based on your preferences:\n` +
-                    `💰 Budget: ${budget}\n` +
-                    `👥 Passengers: ${passengers}\n` +
-                    `⛽ Fuel Type: ${fuel}\n` +
-                    `🛣️ Driving Style: ${driving}\n` +
-                    `🚙 Vehicle Type: ${vehicleType}\n\n`
-                ]
-            }
-        },
-        {
-            platform: "PLATFORM_UNSPECIFIED", 
-            card: {
-                title: `Recommended: ${rec.model}`,
-                subtitle: rec.description || "Your ideal Ford vehicle",
-                imageUri: rec.image,
-                buttons: [
-                    {
-                        text: "View on Ford.com",
-                        postback: rec.url
-                    }
-                ]
-            }
-        }
-    ]
+   const response = {
+  fulfillmentMessages: [
+    // Fallback text (always shows)
+    {
+      text: {
+        text: [
+          `🚗 Your Perfect Ford Match!\n\n` +
+          `✨ Based on your preferences:\n` +
+          `💰 Budget: ${budget}\n` +
+          `👥 Passengers: ${passengers}\n` +
+          `⛽ Fuel Type: ${fuel}\n` +
+          `🛣️ Driving Style: ${driving}\n` +
+          `🚙 Vehicle Type: ${vehicleType}\n\n` +
+          `🎯 Recommended: ${rec.model}\n` +
+          `${rec.description ? `📋 ${rec.description}` : ''}`
+        ]
+      }
+    },
+    // Card (rich display)
+    {
+      platform: "PLATFORM_UNSPECIFIED",
+      card: {
+        title: `Recommended: ${rec.model}`,
+        subtitle: rec.description || "Your ideal Ford vehicle",
+        imageUri: rec.image.startsWith("https://") ? rec.image : "https://example.com/default.png",
+        buttons: [
+          {
+            text: "View on Ford.com",
+            postback: rec.url.startsWith("https://") ? rec.url : "https://www.ford.com"
+          }
+        ]
+      }
+    }
+  ]
 };
+
 
 
     console.log(`✅ Recommended: ${rec.model}`);
