@@ -7,23 +7,21 @@ app.use(bodyParser.json());
 app.post('/webhook', (req, res) => {
     const params = req.body.queryResult.parameters;
 
-    const budget = params.budget || "Not provided";
-    const drivingType = params.driving_type || "Not provided";
-    const fuelType = params.fuel_type || "Not provided";
-    const passengerCount = params.passenger_count || "Not provided";
-    const vehicleType = params.vehicle_type || "Not provided";
+    const budget = params.Budget || "Not provided";
+    const drivingType = params.DrivingTypes || "Not provided";
+    const fuelType = params.FuelPreferences || "Not provided";
+    const passengerCount = params.PassengerCounts || "Not provided";
+    const vehicleType = params.VehicleTypes || "Not provided";
 
-    const responseText = `Here are the parameters I received:\n
-Budget: ${budget}\n
-Driving Type: ${drivingType}\n
-Fuel Type: ${fuelType}\n
-Passenger Count: ${passengerCount}\n
+    const responseText = `Here are the parameters I received:
+Budget: ${budget}
+Driving Type: ${drivingType}
+Fuel Type: ${fuelType}
+Passenger Count: ${passengerCount}
 Vehicle Type: ${vehicleType}`;
 
     return res.json({
-        fulfillmentMessages: [
-            { text: { text: [responseText] } }
-        ]
+        fulfillmentText: responseText
     });
 });
 
