@@ -106,7 +106,12 @@ app.post('/webhook', (req, res) => {
             model: "Ford Escape",
             description: "Versatile SUV suitable for a wide range of needs",
             url: "https://www.ford.com/suvs/escape/",
-            image: "https://share.google/images/DxEzqLQpdQuaps41B"
+            image: {
+                src: {
+                    rawUrl: "https://raw.githubusercontent.com/Luke-Wojciuch/Dialog_Flow_Webhook/main/images/Ford_Escape.jpg"
+  }
+}
+
         };
     }
 
