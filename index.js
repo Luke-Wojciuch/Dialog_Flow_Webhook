@@ -129,9 +129,7 @@ const response = {
           `👥 Passengers: ${passengers}\n` +
           `⛽ Fuel Type: ${fuel}\n` +
           `🛣️ Driving Style: ${driving}\n` +
-          `🚙 Vehicle Type: ${vehicleType}\n\n` +
-          `🎯 Recommended: ${rec.model}\n` +
-          `${rec.description ? `📋 ${rec.description}` : ''}`
+          `🚙 Vehicle Type: ${vehicleType}\n\n`
         ]
       }
     },
