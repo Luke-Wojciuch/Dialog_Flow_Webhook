@@ -17,10 +17,10 @@ app.post('/webhook', (req, res) => {
 
     // Extract each parameter safely
     const budget = params.Budget || "Not provided";
-    const drivingType = params.DrivingTypes || "Not provided";
-    const fuelType = params.FuelPreferences || "Not provided";
-    const passengerCount = params.PassengerCounts || "Not provided";
-    const vehicleType = params.VehicleTypes || "Not provided";
+    const drivingType = params.DrivType || "Not provided";
+    const fuelType = params.FuelPref || "Not provided";
+    const passengerCount = params.PassCnt || "Not provided";
+    const vehicleType = params.VehType || "Not provided";
 
     const responseText = `Here are the parameters I received:
 Budget: ${budget}
