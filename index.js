@@ -1,12 +1,12 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-
 const app = express();
-app.use(bodyParser.json());
+
+app.use(express.json()); // Parse JSON requests
 
 // In-memory session store
 const sessions = {};
 
+// Webhook endpoint
 app.post('/webhook', (req, res) => {
     const sessionId = req.body.session;
     const params = req.body.queryResult.parameters || {};
@@ -20,9 +20,8 @@ app.post('/webhook', (req, res) => {
     // Destructure stored parameters
     const { Budget, PassengerCounts, FuelPreferences, DrivingTypes, VehicleTypes } = sessions[sessionId];
 
-    // Check if this is the final recommendation step
-    if (req.body.queryResult.intent.displayName === "RecommendationIntent") {
-
+    // Only respond if all required parameters are collected
+    if (Budget && PassengerCounts && FuelPreferences && DrivingTypes && VehicleTypes) {
         const rec = recommendFord(Budget, PassengerCounts, FuelPreferences, DrivingTypes, VehicleTypes);
 
         const response = {
@@ -31,11 +30,11 @@ app.post('/webhook', (req, res) => {
                     text: {
                         text: [
                             `🚗 Your Perfect Ford Match!\n\n✨ Based on your preferences:\n` +
-                            `💰 Budget: ${Budget || "—"}\n` +
-                            `👥 Passengers: ${PassengerCounts || "—"}\n` +
-                            `⛽ Fuel Type: ${FuelPreferences || "—"}\n` +
-                            `🛣️ Driving Style: ${DrivingTypes || "—"}\n` +
-                            `🚙 Vehicle Type: ${VehicleTypes || "—"}\n\n`
+                            `💰 Budget: ${Budget}\n` +
+                            `👥 Passengers: ${PassengerCounts}\n` +
+                            `⛽ Fuel Type: ${FuelPreferences}\n` +
+                            `🛣️ Driving Style: ${DrivingTypes}\n` +
+                            `🚙 Vehicle Type: ${VehicleTypes}\n\n`
                         ]
                     }
                 },
@@ -63,11 +62,12 @@ app.post('/webhook', (req, res) => {
         return res.json(response);
     }
 
-    // For parameter collection inte
+    // Parameters not complete: end request silently
+    return res.sendStatus(200);
+});
 
-// Vehicle recommendation logic based on your report
+// Ford recommendation logic
 function recommendFord(budget, passengers, fuel, driving, vehType) {
-    // 1️⃣ Budget under $20k → Recommend used cars
     if (budget === "Under $20,000") {
         return {
             model: "Used Ford Vehicle",
@@ -77,7 +77,6 @@ function recommendFord(budget, passengers, fuel, driving, vehType) {
         };
     }
 
-    // 2️⃣ $20k–$30k → Escape, Maverick, Fusion Hybrid
     if (budget === "$20,000-$30,000") {
         if (vehType === "SUV" && (fuel === "Gas" || fuel === "Hybrid")) {
             return {
@@ -105,7 +104,6 @@ function recommendFord(budget, passengers, fuel, driving, vehType) {
         }
     }
 
-    // 3️⃣ $30k–$40k → Bronco Sport or base Mach-E
     if (budget === "$30,000-$40,000") {
         if (vehType === "SUV" && driving === "Adventure") {
             return {
@@ -125,7 +123,6 @@ function recommendFord(budget, passengers, fuel, driving, vehType) {
         }
     }
 
-    // 4️⃣ $40k+ → Explorer or premium Mach-E
     if (budget === "$40,000+") {
         if (vehType === "SUV" && passengers === "5-7") {
             return {
@@ -145,7 +142,7 @@ function recommendFord(budget, passengers, fuel, driving, vehType) {
         }
     }
 
-    // 5️⃣ Default fallback
+    // Default fallback
     return {
         model: "Ford Escape",
         description: "Reliable, versatile SUV suitable for most drivers. Available in hybrid and gasoline models.",
@@ -154,6 +151,7 @@ function recommendFord(budget, passengers, fuel, driving, vehType) {
     };
 }
 
+// Root endpoint
 app.get('/', (req, res) => res.send("🚗 Ford Recommendation Webhook is running!"));
 
 const PORT = process.env.PORT || 10000;
