@@ -6,11 +6,19 @@ app.use(bodyParser.json());
 
 app.post('/webhook', (req, res) => {
     const contexts = req.body.queryResult.outputContexts || [];
+    const sessionPath = req.body.session;
 
     const getParam = (name) => {
+        // Check parameters from queryResult first (current intent)
+        if (req.body.queryResult.parameters && req.body.queryResult.parameters[name] !== undefined) {
+            return req.body.queryResult.parameters[name];
+        }
+        
+        // Then check output contexts (previous intents)
         for (let ctx of contexts) {
-            if (ctx.parameters && ctx.parameters[name] !== undefined)
+            if (ctx.parameters && ctx.parameters[name] !== undefined) {
                 return ctx.parameters[name];
+            }
         }
         return "Not provided";
     };
@@ -20,6 +28,15 @@ app.post('/webhook', (req, res) => {
     const fuel = getParam('FuelPreferences');
     const driving = getParam('DrivingTypes');
     const vehicleType = getParam('VehicleTypes');
+
+    // Log captured parameters for debugging
+    console.log('📊 Captured Parameters:', {
+        budget,
+        passengers,
+        fuel,
+        driving,
+        vehicleType
+    });
 
     // Decision logic
     function recommendFord(budget, passengers, fuel, driving, vehType) {
@@ -106,63 +123,70 @@ app.post('/webhook', (req, res) => {
             model: "Ford Escape",
             description: "Versatile SUV suitable for a wide range of needs",
             url: "https://www.ford.com/suvs/escape/",
-            image: {
-                src: {
-                    rawUrl: "https://raw.githubusercontent.com/Luke-Wojciuch/Dialog_Flow_Webhook/main/images/Ford_Escape.jpg"
-  }
-}
-
+            image: "https://raw.githubusercontent.com/Luke-Wojciuch/Dialog_Flow_Webhook/main/images/Ford_Escape.jpg"
         };
     }
 
     const rec = recommendFord(budget, passengers, fuel, driving, vehicleType);
 
-    // Rich response with improved formatting
-const response = {
-  fulfillmentMessages: [
-    {
-      text: {
-        text: [
-          `🚗 Your Perfect Ford Match!\n\n` +
-          `✨ Based on your preferences:\n` +
-          `💰 Budget: ${budget}\n` +
-          `👥 Passengers: ${passengers}\n` +
-          `⛽ Fuel Type: ${fuel}\n` +
-          `🛣️ Driving Style: ${driving}\n` +
-          `🚙 Vehicle Type: ${vehicleType}\n\n` +
-          `🎯 Recommended: ${rec.model}\n` +
-          `${rec.description ? `📋 ${rec.description}` : ''}`
-          `🚙 Vehicle Type: ${vehicleType}\n\n`
-        ]
-      }
-    },
-    {
-      payload: {
-        richContent: [
-          [
+    // Rich response with improved formatting and context preservation
+    const response = {
+        fulfillmentMessages: [
             {
-              type: "info",
-              title: `✅ ${rec.model}`,
-              subtitle: rec.description || "Your ideal Ford vehicle",
-              image: {
-                src: { rawUrl: rec.image }
-              },
-              actionLink: rec.url
+                text: {
+                    text: [
+                        `🚗 Your Perfect Ford Match!\n\n` +
+                        `✨ Based on your preferences:\n` +
+                        `💰 Budget: ${budget}\n` +
+                        `👥 Passengers: ${passengers}\n` +
+                        `⛽ Fuel Type: ${fuel}\n` +
+                        `🛣️ Driving Style: ${driving}\n` +
+                        `🚙 Vehicle Type: ${vehicleType}\n\n` +
+                        `🎯 Recommended: ${rec.model}\n` +
+                        `${rec.description ? `📋 ${rec.description}` : ''}`
+                    ]
+                }
             },
-            { type: "divider" },
             {
-              type: "chips",
-              options: [
-                { text: "View Details", link: rec.url },
-              ]
+                payload: {
+                    richContent: [
+                        [
+                            {
+                                type: "info",
+                                title: `✅ ${rec.model}`,
+                                subtitle: rec.description || "Your ideal Ford vehicle",
+                                image: {
+                                    src: { rawUrl: rec.image }
+                                },
+                                actionLink: rec.url
+                            },
+                            { type: "divider" },
+                            {
+                                type: "chips",
+                                options: [
+                                    { text: "View Details", link: rec.url }
+                                ]
+                            }
+                        ]
+                    ]
+                }
             }
-          ]
+        ],
+        // CRITICAL: Set output contexts to preserve parameters across intents
+        outputContexts: [
+            {
+                name: `${sessionPath}/contexts/ford-params`,
+                lifespanCount: 5, // Keep parameters alive for 5 interactions
+                parameters: {
+                    Budget: budget,
+                    PassengerCounts: passengers,
+                    FuelPreferences: fuel,
+                    DrivingTypes: driving,
+                    VehicleTypes: vehicleType
+                }
+            }
         ]
-      }
-    }
-  ]
-};
-
+    };
 
     console.log(`✅ Recommended: ${rec.model}`);
     return res.json(response);
