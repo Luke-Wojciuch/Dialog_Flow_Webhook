@@ -63,11 +63,7 @@ app.post('/webhook', (req, res) => {
         return res.json(response);
     }
 
-    // For parameter collection intents
-    res.json({
-        fulfillmentText: `👍 Got it! Stored your response for ${Object.keys(params).join(', ')}.`
-    });
-});
+    // For parameter collection inte
 
 // Vehicle recommendation logic based on your report
 function recommendFord(budget, passengers, fuel, driving, vehType) {
