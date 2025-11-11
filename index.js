@@ -1,157 +1,173 @@
 const express = require('express');
+const bodyParser = require('body-parser');
+
 const app = express();
+app.use(bodyParser.json());
 
-app.use(express.json()); // Parse JSON requests
-
-// In-memory session store
-const sessions = {};
-
-// Webhook endpoint
 app.post('/webhook', (req, res) => {
-    const sessionId = req.body.session;
-    const params = req.body.queryResult.parameters || {};
+    const contexts = req.body.queryResult.outputContexts || [];
 
-    // Initialize session
-    if (!sessions[sessionId]) sessions[sessionId] = {};
-
-    // Merge new parameters into session
-    Object.assign(sessions[sessionId], params);
-
-    // Destructure stored parameters
-    const { Budget, PassengerCounts, FuelPreferences, DrivingTypes, VehicleTypes } = sessions[sessionId];
-
-    // Only respond if all required parameters are collected
-    if (Budget && PassengerCounts && FuelPreferences && DrivingTypes && VehicleTypes) {
-        const rec = recommendFord(Budget, PassengerCounts, FuelPreferences, DrivingTypes, VehicleTypes);
-
-        const response = {
-            fulfillmentMessages: [
-                {
-                    text: {
-                        text: [
-                            `🚗 Your Perfect Ford Match!\n\n✨ Based on your preferences:\n` +
-                            `💰 Budget: ${Budget}\n` +
-                            `👥 Passengers: ${PassengerCounts}\n` +
-                            `⛽ Fuel Type: ${FuelPreferences}\n` +
-                            `🛣️ Driving Style: ${DrivingTypes}\n` +
-                            `🚙 Vehicle Type: ${VehicleTypes}\n\n`
-                        ]
-                    }
-                },
-                {
-                    payload: {
-                        richContent: [
-                            [
-                                {
-                                    type: "info",
-                                    title: `✅ ${rec.model}`,
-                                    subtitle: rec.description,
-                                    image: { src: { rawUrl: rec.image } },
-                                    actionLink: rec.url
-                                },
-                                { type: "divider" },
-                                { type: "chips", options: [{ text: "View Details", link: rec.url }] }
-                            ]
-                        ]
-                    }
-                }
-            ]
-        };
-
-        console.log(`✅ Recommended: ${rec.model}`);
-        return res.json(response);
-    }
-
-    // Parameters not complete: end request silently
-    return res.sendStatus(200);
-});
-
-// Ford recommendation logic
-function recommendFord(budget, passengers, fuel, driving, vehType) {
-    if (budget === "Under $20,000") {
-        return {
-            model: "Used Ford Vehicle",
-            description: "For budgets under $20,000, consider purchasing a certified pre-owned Ford. Reliable Escapes, Fusions, or Mavericks are available at local dealers.",
-            url: "https://www.fordblueadvantage.com/",
-            image: "https://www.fordblueadvantage.com/content/dam/ford/blueadvantage/hero/ford-blue-advantage-certified-used.jpg"
-        };
-    }
-
-    if (budget === "$20,000-$30,000") {
-        if (vehType === "SUV" && (fuel === "Gas" || fuel === "Hybrid")) {
-            return {
-                model: "Ford Escape",
-                description: "Compact SUV with seating for 5, up to 41 MPG, and excellent safety features. Perfect for city or family use.",
-                url: "https://www.ford.com/suvs/escape/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2025/collections/25_ford_escape.png"
-            };
+    const getParam = (name) => {
+        for (let ctx of contexts) {
+            if (ctx.parameters && ctx.parameters[name] !== undefined)
+                return ctx.parameters[name];
         }
-        if (vehType === "Truck") {
-            return {
-                model: "Ford Maverick",
-                description: "Compact pickup with up to 37 MPG and 4,000 lb towing capacity. Ideal for cargo flexibility and efficiency.",
-                url: "https://www.ford.com/trucks/maverick/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/trucks/maverick/2025/collections/25_ford_maverick.png"
-            };
-        }
-        if (vehType === "Sedan" && fuel === "Hybrid") {
-            return {
-                model: "Ford Fusion Hybrid",
-                description: "Efficient midsize sedan with 47 MPG and Ford Co-Pilot360™ safety features. Great for rideshare or city commuting.",
-                url: "https://www.ford.com/cars/fusion/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fusion/2020/collections/20_ford_fusion_hybrid.png"
-            };
-        }
-    }
+        return "Not provided";
+    };
 
-    if (budget === "$30,000-$40,000") {
-        if (vehType === "SUV" && driving === "Adventure") {
-            return {
-                model: "Ford Bronco Sport",
-                description: "Compact SUV designed for adventure with AWD and off-road capability. Perfect for active lifestyles.",
-                url: "https://www.ford.com/suvs/bronco-sport/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/bronco-sport/2025/collections/25_ford_bronco_sport.png"
-            };
+    const budget = getParam('Budget');
+    const passengers = getParam('PassengerCounts');
+    const fuel = getParam('FuelPreferences');
+    const driving = getParam('DrivingTypes');
+    const vehicleType = getParam('VehicleTypes');
+
+    // Decision logic
+    function recommendFord(budget, passengers, fuel, driving, vehType) {
+        if (budget === "Under $20,000") {
+            if (passengers === "1-2" && fuel === "Gas" && driving === "City" && vehType === "Sedan") {
+                return {
+                    model: "Ford Fiesta",
+                    description: "Perfect for city driving with excellent fuel economy",
+                    url: "https://www.ford.com/cars/fiesta/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fiesta/2022/collections/21_ford_fiesta.png"
+                };
+            }
         }
-        if (fuel === "Electric" && vehType === "SUV") {
+
+        if (budget === "$20,000-$30,000") {
+            if (passengers === "3-4" && (fuel === "Gas" || fuel === "Hybrid") && vehType === "SUV") {
+                return {
+                    model: "Ford Escape",
+                    description: "Versatile SUV with available hybrid option for efficient family transport",
+                    url: "https://www.ford.com/suvs/escape/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2022/collections/21_ford_escape.png"
+                };
+            }
+        }
+
+        if (budget === "$30,000-$40,000") {
+            if (passengers === "3-4" && fuel === "Gas" && driving === "Mixed Use" && vehType === "SUV") {
+                return {
+                    model: "Ford Bronco Sport",
+                    description: "Adventure-ready SUV built for both city streets and off-road trails",
+                    url: "https://www.ford.com/suvs/bronco-sport/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/bronco-sport/2022/collections/21_ford_bronco_sport.png"
+                };
+            }
+            if (passengers === "5-6" && fuel === "Gas" && driving === "Highway" && vehType === "Truck") {
+                return {
+                    model: "Ford F-150",
+                    description: "America's best-selling truck with legendary capability and comfort",
+                    url: "https://www.ford.com/trucks/f150/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/trucks/f150/2022/collections/21_ford_f150.png"
+                };
+            }
+        }
+
+        if (budget === "$40,000+") {
+            if (passengers === "5-6" && (fuel === "Gas" || fuel === "Hybrid") && vehType === "SUV") {
+                return {
+                    model: "Ford Explorer",
+                    description: "Spacious three-row SUV combining luxury with utility",
+                    url: "https://www.ford.com/suvs/explorer/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/explorer/2022/collections/21_ford_explorer.png"
+                };
+            }
+            if (passengers === "7+" && fuel === "Gas" && vehType === "SUV") {
+                return {
+                    model: "Ford Expedition",
+                    description: "Full-size SUV with maximum passenger and cargo capacity",
+                    url: "https://www.ford.com/suvs/expedition/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/expedition/2022/collections/21_ford_expedition.png"
+                };
+            }
+            if ((passengers === "1-6") && fuel === "Electric" && vehType === "Truck") {
+                return {
+                    model: "Ford F-150 Lightning",
+                    description: "Electric powerhouse with cutting-edge technology and zero emissions",
+                    url: "https://www.ford.com/trucks/f150/lightning/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/trucks/f150/lightning/2022/collections/21_ford_f150_lightning.png"
+                };
+            }
+        }
+
+        // Electric performance option
+        if (budget === "$30,000+" && passengers === "1-2" && fuel === "Electric" && vehType === "Sedan") {
             return {
                 model: "Ford Mustang Mach-E",
-                description: "Fully electric SUV with up to 480 HP, zero emissions, and modern tech.",
-                url: "https://www.ford.com/suvs/mach-e/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/mach-e/2025/collections/25_ford_mustang_mach-e.png"
+                description: "Electric performance SUV with iconic Mustang heritage",
+                url: "https://www.ford.com/cars/mustang-mach-e/",
+                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/mustang-mach-e/2022/collections/21_ford_mustang_mach-e.png"
             };
         }
-    }
 
-    if (budget === "$40,000+") {
-        if (vehType === "SUV" && passengers === "5-7") {
-            return {
-                model: "Ford Explorer",
-                description: "Spacious three-row SUV with up to 400 HP, AWD, and top safety features. Ideal for families or group transport.",
-                url: "https://www.ford.com/suvs/explorer/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/explorer/2025/collections/25_ford_explorer.png"
-            };
-        }
-        if (fuel === "Electric" && vehType === "SUV") {
-            return {
-                model: "Ford Mustang Mach-E (Premium Trim)",
-                description: "Upgraded all-electric SUV with high performance, long range, and premium comfort.",
-                url: "https://www.ford.com/suvs/mach-e/",
-                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/mach-e/2025/collections/25_ford_mustang_mach-e.png"
-            };
-        }
-    }
-
-    // Default fallback
-    return {
-        model: "Ford Escape",
-        description: "Reliable, versatile SUV suitable for most drivers. Available in hybrid and gasoline models.",
-        url: "https://www.ford.com/suvs/escape/",
-        image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2025/collections/25_ford_escape.png"
-    };
+        // Default fallback
+        return {
+            model: "Ford Escape",
+            description: "Versatile SUV suitable for a wide range of needs",
+            url: "https://www.ford.com/suvs/escape/",
+            image: {
+                src: {
+                    rawUrl: "https://raw.githubusercontent.com/Luke-Wojciuch/Dialog_Flow_Webhook/main/images/Ford_Escape.jpg"
+  }
 }
 
-// Root endpoint
+        };
+    }
+
+    const rec = recommendFord(budget, passengers, fuel, driving, vehicleType);
+
+    // Rich response with improved formatting
+const response = {
+  fulfillmentMessages: [
+    {
+      text: {
+        text: [
+          `🚗 Your Perfect Ford Match!\n\n` +
+          `✨ Based on your preferences:\n` +
+          `💰 Budget: ${budget}\n` +
+          `👥 Passengers: ${passengers}\n` +
+          `⛽ Fuel Type: ${fuel}\n` +
+          `🛣️ Driving Style: ${driving}\n` +
+          `🚙 Vehicle Type: ${vehicleType}\n\n` +
+          `🎯 Recommended: ${rec.model}\n` +
+          `${rec.description ? `📋 ${rec.description}` : ''}`
+          `🚙 Vehicle Type: ${vehicleType}\n\n`
+        ]
+      }
+    },
+    {
+      payload: {
+        richContent: [
+          [
+            {
+              type: "info",
+              title: `✅ ${rec.model}`,
+              subtitle: rec.description || "Your ideal Ford vehicle",
+              image: {
+                src: { rawUrl: rec.image }
+              },
+              actionLink: rec.url
+            },
+            { type: "divider" },
+            {
+              type: "chips",
+              options: [
+                { text: "View Details", link: rec.url },
+              ]
+            }
+          ]
+        ]
+      }
+    }
+  ]
+};
+
+
+    console.log(`✅ Recommended: ${rec.model}`);
+    return res.json(response);
+});
+
 app.get('/', (req, res) => res.send("🚗 Ford Recommendation Webhook is running!"));
 
 const PORT = process.env.PORT || 10000;
