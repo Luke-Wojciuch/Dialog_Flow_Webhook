@@ -113,7 +113,7 @@ app.post('/webhook', (req, res) => {
 
     const rec = recommendFord(budget, passengers, fuel, driving, vehicleType);
 
-    // Rich response with improved formatting
+    // Rich response with improved formatting 
 const response = {
   fulfillmentMessages: [
     {
