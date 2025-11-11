@@ -49,17 +49,10 @@ app.post('/webhook', (req, res) => {
                 image: "https://www.fordblueadvantage.com/content/dam/ford/blueadvantage/hero/ford-blue-advantage-certified-used.jpg"
             };
         }
-
+    
         // 2️⃣ $20k–$30k → Escape, Maverick, Fusion Hybrid
         if (budget === "$20,000-$30,000") {
-            if (vehType === "SUV" && (fuel === "Gas" || fuel === "Hybrid")) {
-                return {
-                    model: "Ford Escape",
-                    description: "Compact SUV with seating for 5, up to 41 MPG, and excellent safety features. Perfect for city or family use.",
-                    url: "https://www.ford.com/suvs/escape/",
-                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2025/collections/25_ford_escape.png"
-                };
-            }
+            // Truck preference gets Maverick
             if (vehType === "Truck") {
                 return {
                     model: "Ford Maverick",
@@ -68,7 +61,9 @@ app.post('/webhook', (req, res) => {
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/trucks/maverick/2025/collections/25_ford_maverick.png"
                 };
             }
-            if (vehType === "Sedan" && fuel === "Hybrid") {
+            
+            // Sedan preference gets Fusion Hybrid
+            if (vehType === "Sedan") {
                 return {
                     model: "Ford Fusion Hybrid",
                     description: "Efficient midsize sedan with 47 MPG and Ford Co-Pilot360™ safety features. Great for rideshare or city commuting.",
@@ -76,19 +71,30 @@ app.post('/webhook', (req, res) => {
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fusion/2020/collections/20_ford_fusion_hybrid.png"
                 };
             }
+            
+            // SUV or default gets Escape
+            return {
+                model: "Ford Escape",
+                description: "Compact SUV with seating for 5, up to 41 MPG, and excellent safety features. Perfect for city or family use.",
+                url: "https://www.ford.com/suvs/escape/",
+                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2025/collections/25_ford_escape.png"
+            };
         }
-
+    
         // 3️⃣ $30k–$40k → Bronco Sport or base Mach-E
         if (budget === "$30,000-$40,000") {
-            if (vehType === "SUV" && driving === "Adventure") {
+            // Sedan still gets Fusion (best fit in this range)
+            if (vehType === "Sedan") {
                 return {
-                    model: "Ford Bronco Sport",
-                    description: "Compact SUV designed for adventure with AWD and off-road capability. Perfect for active lifestyles.",
-                    url: "https://www.ford.com/suvs/bronco-sport/",
-                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/bronco-sport/2025/collections/25_ford_bronco_sport.png"
+                    model: "Ford Fusion Hybrid",
+                    description: "Efficient midsize sedan with 47 MPG and Ford Co-Pilot360™ safety features. Great for rideshare or city commuting.",
+                    url: "https://www.ford.com/cars/fusion/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fusion/2020/collections/20_ford_fusion_hybrid.png"
                 };
             }
-            if (fuel === "Electric" && vehType === "SUV") {
+            
+            // Electric preference gets Mach-E
+            if (fuel === "Electric") {
                 return {
                     model: "Ford Mustang Mach-E",
                     description: "Fully electric SUV with up to 480 HP, zero emissions, and modern tech.",
@@ -96,19 +102,40 @@ app.post('/webhook', (req, res) => {
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/mach-e/2025/collections/25_ford_mustang_mach-e.png"
                 };
             }
-        }
-
-        // 4️⃣ $40k+ → Explorer or premium Mach-E
-        if (budget === "$40,000+") {
-            if (vehType === "SUV" && passengers === "5-7") {
+            
+            // Adventure/Mixed-use or SUV gets Bronco Sport
+            if (driving === "Mixed-use" || vehType === "SUV") {
                 return {
-                    model: "Ford Explorer",
-                    description: "Spacious three-row SUV with up to 400 HP, AWD, and top safety features. Ideal for families or group transport.",
-                    url: "https://www.ford.com/suvs/explorer/",
-                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/explorer/2025/collections/25_ford_explorer.png"
+                    model: "Ford Bronco Sport",
+                    description: "Compact SUV designed for adventure with AWD and off-road capability. Perfect for active lifestyles.",
+                    url: "https://www.ford.com/suvs/bronco-sport/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/bronco-sport/2025/collections/25_ford_bronco_sport.png"
                 };
             }
-            if (fuel === "Electric" && vehType === "SUV") {
+            
+            // Default to Escape
+            return {
+                model: "Ford Escape",
+                description: "Compact SUV with seating for 5, up to 41 MPG, and excellent safety features. Perfect for city or family use.",
+                url: "https://www.ford.com/suvs/escape/",
+                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/escape/2025/collections/25_ford_escape.png"
+            };
+        }
+    
+        // 4️⃣ $40k+ → Explorer or premium Mach-E
+        if (budget === "$40,000+") {
+            // Sedan gets Fusion (or could suggest looking at Lincoln)
+            if (vehType === "Sedan") {
+                return {
+                    model: "Ford Fusion Hybrid",
+                    description: "Efficient midsize sedan with 47 MPG and Ford Co-Pilot360™ safety features. For luxury sedans, consider Lincoln models.",
+                    url: "https://www.ford.com/cars/fusion/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fusion/2020/collections/20_ford_fusion_hybrid.png"
+                };
+            }
+            
+            // Electric preference gets premium Mach-E
+            if (fuel === "Electric") {
                 return {
                     model: "Ford Mustang Mach-E (Premium Trim)",
                     description: "Upgraded all-electric SUV with high performance, long range, and premium comfort.",
@@ -116,8 +143,26 @@ app.post('/webhook', (req, res) => {
                     image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/mach-e/2025/collections/25_ford_mustang_mach-e.png"
                 };
             }
+            
+            // Large family or 5-7 passengers gets Explorer
+            if (passengers === "5-7" || passengers === "7+") {
+                return {
+                    model: "Ford Explorer",
+                    description: "Spacious three-row SUV with up to 400 HP, AWD, and top safety features. Ideal for families or group transport.",
+                    url: "https://www.ford.com/suvs/explorer/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/explorer/2025/collections/25_ford_explorer.png"
+                };
+            }
+            
+            // Default premium option
+            return {
+                model: "Ford Explorer",
+                description: "Spacious three-row SUV with up to 400 HP, AWD, and top safety features. Ideal for families or group transport.",
+                url: "https://www.ford.com/suvs/explorer/",
+                image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/suvs/explorer/2025/collections/25_ford_explorer.png"
+            };
         }
-
+    
         // 5️⃣ Default fallback
         return {
             model: "Ford Escape",
