@@ -1,3 +1,9 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+
+const app = express();
+app.use(bodyParser.json());
+
 app.post('/webhook', (req, res) => {
     const contexts = req.body.queryResult.outputContexts || [];
     const sessionPath = req.body.session;
@@ -11,7 +17,7 @@ app.post('/webhook', (req, res) => {
                 return ctx.parameters[name];
             }
         }
-        return null;
+        return "Not Provided";
     };
 
     const budgetRaw = getParam('Budget');
@@ -207,3 +213,9 @@ app.post('/webhook', (req, res) => {
     console.log(`✅ Recommended: ${rec.model}`);
     return res.json(response);
 });
+
+
+app.get('/', (req, res) => res.send("🚗 Ford Recommendation Webhook is running!"));
+
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
