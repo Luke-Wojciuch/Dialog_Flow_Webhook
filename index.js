@@ -77,7 +77,7 @@ app.post('/webhook', (req, res) => {
             };
         }
 
-        if (avgBudget >= 20000 && avgBudget < 30000) {
+        if (avgBudget >= 20000 && avgBudget <= 30000) {
             if (vehType === "Truck") {
                 return {
                     model: "Ford Maverick",
@@ -102,7 +102,7 @@ app.post('/webhook', (req, res) => {
             };
         }
 
-        if (avgBudget >= 30000 && avgBudget < 40000) {
+        if (avgBudget >= 30000 && avgBudget <= 40000) {
             if (fuel === "Electric") {
                 return {
                     model: "Ford Mustang Mach-E",
@@ -127,7 +127,7 @@ app.post('/webhook', (req, res) => {
             };
         }
 
-        if (avgBudget >= 40000) {
+        if (avgBudget > 40000) {
             if (fuel === "Electric") {
                 return {
                     model: "Ford Mustang Mach-E Premium",
