@@ -68,16 +68,16 @@ app.post('/webhook', (req, res) => {
 
         const avgBudget = (budgetObj.min + budgetObj.max) / 2;
 
-        if (avgBudget < 20000) {
+        if (avgBudget <= 20000) {
             return {
                 model: "Used Ford Vehicle",
-                description: "For budgets under $20,000, consider a certified pre-owned Ford.",
+                description: "For budgets $20,000 and under, consider a certified pre-owned Ford.",
                 url: "https://www.fordblueadvantage.com/",
                 image: "https://www.fordblueadvantage.com/content/dam/ford/blueadvantage/hero/ford-blue-advantage-certified-used.jpg"
             };
         }
 
-        if (avgBudget >= 20000 && avgBudget < 30000) {
+        if (avgBudget > 20000 && avgBudget < 30000) {
             if (vehType === "Truck") {
                 return {
                     model: "Ford Maverick",
