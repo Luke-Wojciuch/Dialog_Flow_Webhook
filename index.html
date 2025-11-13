@@ -4,17 +4,102 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>S355RidesharingFordBot</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Roboto, Arial, sans-serif;
+        background: linear-gradient(135deg, #0a2a66, #0a74da);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+      }
+
+      header {
+        margin-bottom: 25px;
+      }
+
+      .logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 12px;
+      }
+
+      .logos img {
+        height: 60px;
+      }
+
+      .separator {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #ffffffcc;
+      }
+
+      h2 {
+        font-weight: 600;
+        font-size: 1.8rem;
+        margin: 8px 0 0 0;
+      }
+
+      p.tagline {
+        font-size: 1rem;
+        font-style: italic;
+        margin-top: 8px;
+        color: #dbe8ff;
+      }
+
+
+
+      df-messenger {
+        --df-messenger-bot-message: #e5e5e5;
+        --df-messenger-button-titlebar-color: #003399;
+        --df-messenger-chat-background-color: #ffffff;
+        --df-messenger-font-color: #000000;
+        --df-messenger-send-icon: #003399;
+        border-radius: 12px;
+      }
+
+      @media (max-width: 600px) {
+        .logos img {
+          height: 45px;
+        }
+        .separator {
+          font-size: 1.5rem;
+        }
+        h2 {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h2 style="text-align:center;">Welcome to Ford Rideshare Bot</h2>
+    <header>
+      <div class="logos">
+           <img
+        src="https://upload.wikimedia.org/wikipedia/commons/3/3e/Ford_logo_flat.svg"
+        alt="Ford Logo"
+      />
+        <span class="separator">×</span>
+        <img src="images/kls2-logo.png" alt="KLS² Consulting Logo" />
+      </div>
+      <h2>Welcome to Ford Rideshare Bot</h2>
+      <p class="tagline">Empowering rideshare users through intelligent automation.</p>
+    </header>
 
-    <!-- Dialogflow Messenger Embed -->
-    <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-    <df-messenger
-      intent="WELCOME"
-      chat-title="S355RidesharingFordBot"
-      agent-id="8c2d65e9-dcb2-4ee0-92ae-0524ccd46525"
-      language-code="en"
-    ></df-messenger>
+    <div class="chat-container">
+      <!-- Dialogflow Messenger Embed -->
+      <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+      <df-messenger
+        intent="WELCOME"
+        chat-title="S355RidesharingFordBot"
+        agent-id="8c2d65e9-dcb2-4ee0-92ae-0524ccd46525"
+        language-code="en"
+      ></df-messenger>
+    </div>
   </body>
 </html>
