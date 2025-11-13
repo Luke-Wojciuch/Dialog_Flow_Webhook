@@ -77,7 +77,7 @@ app.post('/webhook', (req, res) => {
             };
         }
 
-        if (avgBudget >= 20000 && avgBudget <= 30000) {
+        if (avgBudget >= 20000 && avgBudget < 30000) {
             if (vehType === "Truck") {
                 return {
                     model: "Ford Maverick",
@@ -103,6 +103,15 @@ app.post('/webhook', (req, res) => {
         }
 
         if (avgBudget >= 30000 && avgBudget <= 40000) {
+             if (vehType === "Sedan") {
+                return {
+                    model: "Ford Fusion Hybrid",
+                    description: "Efficient midsize sedan with 47 MPG and Ford Co-Pilot360™ safety features. Great for rideshare or city commuting.",
+                    url: "https://www.ford.com/cars/fusion/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fusion/2020/collections/20_ford_fusion_hybrid.png"
+                };
+            }
+            
             if (fuel === "Electric") {
                 return {
                     model: "Ford Mustang Mach-E",
@@ -128,6 +137,16 @@ app.post('/webhook', (req, res) => {
         }
 
         if (avgBudget > 40000) {
+            
+             if (vehType === "Sedan") {
+                return {
+                    model: "Ford Fusion Hybrid",
+                    description: "Efficient midsize sedan with 47 MPG and Ford Co-Pilot360™ safety features. For luxury sedans, consider Lincoln models.",
+                    url: "https://www.ford.com/cars/fusion/",
+                    image: "https://www.ford.com/cmslibs/content/dam/brand_ford/en_us/brand/cars/fusion/2020/collections/20_ford_fusion_hybrid.png"
+                };
+            }
+            
             if (fuel === "Electric") {
                 return {
                     model: "Ford Mustang Mach-E Premium",
