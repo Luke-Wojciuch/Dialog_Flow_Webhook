@@ -182,9 +182,9 @@ app.post('/webhook', (req, res) => {
     const rec = recommendFord(budgetParsed, passengers, fuel, driving, vehicleType);
 
     const response = {
-        fulfillmentMessages: [
-            {
-                payload: {
+    fulfillmentMessages: [
+        {
+            payload: {
                 richContent: [
                     [
                         {
@@ -210,40 +210,23 @@ app.post('/webhook', (req, res) => {
                         { type: "chips", options: [{ text: "View Details", link: rec.url }] }
                     ]
                 ]
-            },
-            {
-                payload: {
-                    richContent: [
-                        [
-                            {
-                                type: "info",
-                                title: `✅ ${rec.model}`,
-                                subtitle: rec.description,
-                                image: { src: { rawUrl: rec.image } },
-                                actionLink: rec.url
-                            },
-                            { type: "divider" },
-                            { type: "chips", options: [{ text: "View Details", link: rec.url }] }
-                        ]
-                    ]
-                }
             }
-        ],
-        outputContexts: [
-            {
-                name: `${sessionPath}/contexts/ford-params`,
-                lifespanCount: 5,
-                parameters: {
-                    Budget: budgetRaw,
-                    PassengerCounts: passengers,
-                    FuelPreferences: fuel,
-                    DrivingTypes: driving,
-                    VehicleTypes: vehicleType
-                }
+        }
+    ],
+    outputContexts: [
+        {
+            name: `${sessionPath}/contexts/ford-params`,
+            lifespanCount: 5,
+            parameters: {
+                Budget: budgetRaw,
+                PassengerCounts: passengers,
+                FuelPreferences: fuel,
+                DrivingTypes: driving,
+                VehicleTypes: vehicleType
             }
-        ]
-    };
-
+        }
+    ]
+};
     console.log(`✅ Recommended: ${rec.model}`);
     return res.json(response);
 });
