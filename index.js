@@ -184,17 +184,32 @@ app.post('/webhook', (req, res) => {
     const response = {
         fulfillmentMessages: [
             {
-                text: {
-                    text: [
-                        `🚗 Your Perfect Ford Match!\n\n` +
-                        `💰 Budget: ${budgetRaw}\n` +
-                        `👥 Passengers: ${passengers}\n` +
-                        `⛽ Fuel Type: ${fuel}\n` +
-                        `🛣️ Driving Style: ${driving}\n` +
-                        `🚙 Vehicle Type: ${vehicleType}\n\n` +
-                        `🎯 Recommended: ${rec.model}\n📋 ${rec.description}`
+                payload: {
+                richContent: [
+                    [
+                        {
+                            type: "description",
+                            title: "🚗 Your Perfect Ford Match!",
+                            text: [
+                                "Your Preferences:",
+                                `• Budget: ${budgetRaw}`,
+                                `• Passengers: ${passengers}`,
+                                `• Fuel Type: ${fuel}`,
+                                `• Driving Style: ${driving}`,
+                                `• Vehicle Type: ${vehicleType}`
+                            ]
+                        },
+                        {
+                            type: "info",
+                            title: `✅ ${rec.model}`,
+                            subtitle: rec.description,
+                            image: { src: { rawUrl: rec.image } },
+                            actionLink: rec.url
+                        },
+                        { type: "divider" },
+                        { type: "chips", options: [{ text: "View Details", link: rec.url }] }
                     ]
-                }
+                ]
             },
             {
                 payload: {
